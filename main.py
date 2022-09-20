@@ -1,4 +1,5 @@
 from neuron import *
+from network import *
 import pandas as pd
 
 if __name__ == '__main__':
@@ -9,3 +10,5 @@ if __name__ == '__main__':
     print(adam.get_result([True, True, True]))
 
     df = pd.read_csv("model_input.csv")
+    eden = Network(df)
+    print(eden)
