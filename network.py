@@ -38,3 +38,46 @@ class Network:
             neuron.set_synapses(line['connections'])
             result.append(neuron)  # result[-1].set_synapses(line['connections'])
         return result
+
+    def process(self, external_signals: str = None) -> bool:
+        if external_signals is None:
+            external_signals = [False] * self.amount_of_external
+        else:
+            external_signals = list(external_signals)
+            external_signals = [bool(int(i)) for i in external_signals]
+
+        if len(external_signals) != self.amount_of_external:
+            raise ValueError("Количество сигналов не совпадает с количеством внешних синапсов")
+
+        external_signals = self.calc_neuron_value(self.levels[0][0], external_signals, 0)
+
+        for i in range(1, self.levels_amount):  # уровень
+            for k in range(len(self.levels[i])):  # нейрон
+                external_signals = self.calc_neuron_value(self.levels[i][k], external_signals, i)
+
+        return self.levels[0][0].exit
+
+    def calc_neuron_value(self, neuron: Neuron, external_signals: list, level: int) -> list:
+        signals = []
+        for synapse in neuron.synapses:
+            if synapse.source_id == 0:
+                signals.append(external_signals[0])
+                external_signals = external_signals[1:]
+            else:
+                signals.append(self.levels[level + 1][self._get_index_on_level(synapse.source_id, level + 1)].exit)
+
+        neuron.get_result(signals)
+        return external_signals
+
+    def _get_index_on_level(self, source_id, level) -> int:
+        for i in range(len(self.levels[level])):
+            if self.levels[level][i].ID == source_id:
+                return i
+        raise ValueError("Некорректный адрес")
+
+
+    def print_conditions(self):
+        for level in self.levels:
+            for neuron in level:
+                print(int(neuron.exit), end='')
+            print(" ")

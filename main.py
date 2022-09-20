@@ -13,3 +13,11 @@ if __name__ == '__main__':
     eden = Network(df)
     print("Расположение и тип синапсов в сети:\n", eden, sep='')
     print("Количество внешних синапсов:", eden.amount_of_external)
+
+    print(eden.process("1110111110110"))
+    eden.print_conditions()
+    print()
+    for t in range(eden.levels_amount + 1):
+        print(eden.process())
+        eden.print_conditions()
+        print()

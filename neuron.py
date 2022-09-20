@@ -29,9 +29,12 @@ class Neuron:
         counter = 0
         for i in range(self.synapses_amount):
             if not self.synapses[i].type and signals[i]:
-                return False
+                self.exit = False
+                return self.exit
             elif self.synapses[i].type and signals[i]:
                 counter += 1
         if counter >= self.threshold:
-            return True
-        return False
+            self.exit = True
+            return self.exit
+        self.exit = False
+        return self.exit
