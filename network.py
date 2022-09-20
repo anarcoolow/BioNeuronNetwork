@@ -26,7 +26,8 @@ class Network:
         for level in self.levels:
             for neuron in level:
                 for synapses in neuron.synapses:
-                    result += 1 if not synapses.source_id else result
+                    if synapses.source_id == 0:
+                        result += 1
         return result
 
     def _get_neurons_of_this_level(self, df: pd.DataFrame, number: int) -> List[Neuron]:
